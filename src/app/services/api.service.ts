@@ -7,16 +7,37 @@ import { IProduct } from '../interfaces/iproduct';
   providedIn: 'root'
 })
 export class ApiService {
- public categoria=signal<string | null>('electronics')
+ public categoria=signal<string | null>('all')
+ public search=signal<string | null>('')
+
  public productos=signal<IProduct[]>([]);
   public categories=toSignal<string[]>(this.http.get<string[]>('https://fakestoreapi.com/products/categories'));
 
- 
+ allProductsFilter(){
+  if (this.search()==='') {
+    this.allProducts()
+  }else {
+    this.productos.set(this.productos().filter(data=>data.title.includes(this.search()!)))
+
+  }
+
+ }
+
+
  allProducts(){
-  this.http.get<IProduct[]>(`https://fakestoreapi.com/products/category/${this.categoria()}`)
+
+  if (this.categoria()==='all'){
+    this.http.get<IProduct[]>(`https://fakestoreapi.com/products`)
+    .subscribe(data=>{
+      this.productos.set(data)
+    })
+  } else {
+     this.http.get<IProduct[]>(`https://fakestoreapi.com/products/category/${this.categoria()}`)
   .subscribe(data=>{
     this.productos.set(data)
   })
+  }
+ 
  }
   categorias=computed(()=>{
   const cate= this.categories()?.map((data,index)=>{

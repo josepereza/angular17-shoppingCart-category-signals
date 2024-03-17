@@ -12,12 +12,14 @@
     </section>
     <select class="form-select" aria-label="Default select example"   [formControl]="categoriaForm">
       <option value="" disabled>Choose a state</option>
+      <option value="all" >All</option>
       @for (row of api.categorias(); track row.id ) {
         <option [ngValue]="row.data">{{row.data}}</option>
       }
       
     </select>
 
+    <input class="form-control" type="text" placeholder="Default input" aria-label="default input example" [formControl]="searchForm">
 
     <div class="album py-5 bg-body-tertiary">
       <div class="container">

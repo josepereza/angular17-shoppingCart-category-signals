@@ -17,10 +17,17 @@ export class ProductosComponent {
   carrito=inject(CartService)
   _categoria:string | null=''
   categoriaForm=new FormControl('');
+  searchForm=new FormControl('');
   productos:IProduct[]=[]
   ngOnInit(): void {
     this.api.allProducts()
 
+    this.searchForm.valueChanges.pipe(debounceTime(800),distinctUntilChanged()).
+    subscribe(data=>{
+    console.log(data)
+    this.api.search.set(data)
+    this.api.allProductsFilter()
+    })
 
     this.categoriaForm.valueChanges.pipe(debounceTime(800),distinctUntilChanged()).
     subscribe(data=>{
